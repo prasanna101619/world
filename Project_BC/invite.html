@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>Invite Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            color: #fff;
+            background: rgb(238, 172, 93);
+            background: radial-gradient(circle, rgba(238, 172, 93, 1) 0%, rgba(252, 115, 13, 1) 100%);
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow-x:hidden;
+        }
+
+        .header {
+            display: grid;
+            grid-template-columns: auto 450px auto; /* Three columns: equal width left and right, fixed width for center */
+            grid-template-rows: auto auto; /* Two rows: top row for heading, bottom row for chain */
+            gap: 20px; /* Gap between grid items */
+            align-items: center;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; /* Ensure relative positioning for absolute elements */
+        }
+
+        .header img {
+            max-width: 100%; /* Ensure images don't exceed their container */
+            height: auto;
+            display: block; /* Remove any default image spacing */
+            margin: 0 auto; /* Center images horizontally */
+        }
+
+        .chain {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .b1-container {
+            height: 250px;
+            width: 250px;
+            float: left; /* Float left for b1 */
+        }
+
+        .b2-container {
+            height: 350px;
+            width: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            float: right; /* Float right for b2 */
+            position: absolute;
+            right: 0;
+            top: 50%; /* Adjust top position to center vertically */
+            transform: translateY(-50%);
+        }
+
+        .center-content {
+            width: 450px; 
+            text-align: center; 
+            margin: 0 auto; 
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .bordered-box {
+            border: 5px solid chocolate;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            position: relative; /* Ensure relative positioning for absolute elements */
+        }
+
+        .bordered-box h3 {
+            margin: 0;
+            font-size: 24px; /* Increase font size */
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 50%;
+            right: -90px; /* Adjust as needed to position it outside the border */
+            transform: translateY(-50%);
+            border: none;
+            background-color: transparent;
+            padding: 15px; /* Adjust padding for larger button */
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px; /* Increase font size */
+            font-weight: bold;
+            border-radius: 15px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Box shadow */
+            transition: transform 0.3s, box-shadow 0.3s; /* Transition properties */
+            text-decoration: none;
+        }
+
+        .copy-button:hover {
+            transform: translateY(-50%) scale(1.1); /* Hover scaling effect */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Hover box shadow */
+            text-decoration: none;
+            color: brown;
+        }
+
+        .friends-list {
+            text-align: left;
+            max-width: 450px;
+            margin: 0 auto;
+        }
+
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .friend-name {
+            margin-right: 10px;
+        }
+
+        .friend-coins {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .friend-coins img {
+            width: 20px;
+            height: auto;
+            margin-right: 5px;
+        }
+
+        /* Bottom Navigation Bar Styles */
+        .bottom-navbar {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.2); /* Reduced opacity */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px); /* Glass effect */
+            position: fixed;
+            bottom: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0; /* Adjusted padding */
+            overflow-x: hidden; /* Hide overflow on small screens */
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            position: relative; /* Added position relative */
+        }
+
+        .nav-button img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            border: none;
+            background-color: inherit;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        @media (max-width: 768px) { /* Adjust styles for screens smaller than 768px (typical tablets and phones) */
+            .header {
+                grid-template-columns: auto 150px auto; /* Reduce center content width */
+                gap: 10px; /* Adjust gap for smaller screens */
+            }
+
+            .b1-container img,
+            .b2-container img {
+                width: 100px; /* Adjust max-width for b1 and b2 images */
+            }
+            .b1-container img{
+                left:0;
+                margin-top:30px;
+                width:125px;
+                position: absolute;
+            }
+            .b2-container img{
+                right:0;
+                margin-top: -60px;
+                position: absolute;
+            }
+
+            .center-content {
+                width: 150px; /* Reduce width */
+            }
+
+            .copy-button {
+                right: -80px; /* Adjust position for smaller screens */
+            }
+            .bordered-box{left:-25px;}
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="b1-container">
+            <img src="b.png" alt="b1" style="max-width: 100%;">
+        </div>
+        <div class="center-content">
+            <h1>Invite Friends</h1>
+            <br>
+            <img src="chain.png" alt="chain" class="chain">
+        </div>
+        <div class="b2-container">
+            <img src="b2.png" alt="b2" style="max-width: 100%;">
+        </div>
+    </div>
+    
+    <h2>Your Address:</h2>
+    <div class="bordered-box">
+        <h3>https://www.samp...</h3> <!-- "..." appears in front of the link on smaller screens -->
+        <a href="#" class="copy-button" onclick="copyToClipboard('https://www.samplelink.com')">
+            &#x1F4CB;<br> Copy
+        </a>
+    </div>
+
+    <div class="friends-list">
+        <br><br>
+        <h3>Friends List :</h3><br>
+        <div class="friend-item">
+            <span class="friend-name">Friend 1</span>
+            <span class="friend-coins"><img src="bcoin.png" alt="bcoin"> 10</span>
+        </div>
+        <div class="friend-item">
+            <span class="friend-name">Friend 2</span>
+            <span class="friend-coins"><img src="bcoin.png" alt="bcoin"> 15</span>
+        </div>
+        <div class="friend-item">
+            <span class="friend-name">Friend 3</span>
+            <span class="friend-coins"><img src="bcoin.png" alt="bcoin"> 08</span>
+        </div>
+        <div class="friend-item">
+            <span class="friend-name">Friend 4</span>
+            <span class="friend-coins"><img src="bcoin.png" alt="bcoin"> 12</span>
+        </div>
+        <div class="friend-item">
+            <span class="friend-name">Friend 5</span>
+            <span class="friend-coins"><img src="bcoin.png" alt="bcoin"> 20</span>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-navbar">
+        <a href="index.html" class="nav-button" id="b-icon">
+            <img src="b.png" alt="B Icon" style="height:80px;width:80px;">
+        </a>
+        <div class="nav-button" id="feed-icon" onclick="showPopup('Feed')">
+            <img src="food.png" alt="Feed Icon">
+            <div class="icon-label">Feed</div>
+        </div>
+        <div class="nav-button" id="friend-icon">
+            <img src="friends.png" alt="Friend Icon" style="width:65px;">
+            <div class="icon-label">Friends</div>
+        </div>
+        <div class="nav-button" id="earn-icon" onclick="showPopup('Earn')">
+            <img src="earn.png" alt="Earn Icon">
+            <div class="icon-label">Earn</div>
+        </div>
+        <div class="nav-button" id="airdrop-icon" onclick="showPopup('Airdrop')">
+            <img src="berachain.png" alt="Airdrop Icon">
+            <div class="icon-label">Airdrop</div>
+        </div>
+    </div>
+    <!-- Coming Soon Popup -->
+    <div id="coming-soon-popup" class="popup">
+        <p>Coming Soon</p>
+    </div>
+    <script>
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Copied to clipboard: ' + text);
+        }
+    </script>
+</body>
+</html>

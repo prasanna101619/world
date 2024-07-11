@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <title>Tap Counter</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            color:#fff;
+            background: rgb(238,172,93);
+            background: radial-gradient(circle, rgba(238,172,93,1) 0%, rgba(252,115,13,1) 100%);
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #game-container {
+            border-radius: 15px;
+            background: rgba(255,255,255,0.5); /* Transparent gradient background */
+            background: linear-gradient(rgba(255,255,255,0.5) 0%, rgba(255,255,255,0)25%); /* Updated gradient */
+            padding: 20px;
+            width:100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #navbar, #navbar-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.2); /* Reduced opacity */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px); /* Glass effect */
+            position: fixed;
+            z-index: 1000;
+        }
+        #navbar {
+            width: 100%;
+            top: 0;
+        }
+        #navbar-bottom {
+            width: 100%; /* Full width */
+            bottom: 0;
+            display: flex;
+            justify-content: space-around; /* Center and evenly distribute items */
+            align-items: center;
+            padding: 10px 0; /* Adjusted padding */
+            overflow-x: hidden; /* Hide overflow on small screens */
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color:#fff;
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 10px;
+            position: relative; /* Added position relative */
+        }
+        
+        .nav-button img {
+            width: 50px;
+            height: 50px;
+        }
+        .nav-button:hover{
+            transform: translateY(-2px);
+            border: none;
+            background-color:inherit;
+            border-radius:15px;
+            padding:10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        #b-icon img {
+            width: 50px; /* Larger size for b.png */
+            height: 50px;
+        }
+        #coin-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px; /* Adjusted margin */
+        }
+        #coin-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 5px;
+        }
+        #tap-count {
+            color: #fff;
+            font-weight: bold;
+            font-size: 24px;
+            margin-left: 5px; /* Adjusted margin */
+        }
+        #image-container {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgb(238,172,93);
+            background: radial-gradient(circle, rgba(238,172,93,1) 0%, rgba(252,115,13,1) 100%);
+            border: 20px solid transparent;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.5), 
+                inset 0 0 10px rgba(255, 255, 255, 0.2),
+                0 0 15px rgba(255, 255, 255, 0.1),
+                0 0 20px rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+            transition: transform 0.05s, box-shadow 0.05s;
+            user-select: none;
+            position: relative;
+            margin-top: 20px;
+        }
+        #image-container:after {
+            content: '';
+            position: absolute;
+            bottom: -15px; /* Adjusted position */
+            left: 0;
+            right: 0;
+            height: 10%; /* Adjusted height */
+            background-color: rgba(0, 0, 0, 0.3); /* Adjusted color */
+            border-radius: 50%;
+            transform: translateY(50%);
+            z-index: -1;
+            transition: opacity 0.2s ease; /* Added transition */
+        }
+        #image-container img {
+            width: 90%;
+            height: 90%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        #image-container.tapped {
+            transform: scale(0.95);
+        }
+        .tap-indicator {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            animation: moveUp 1s forwards;
+        }
+        @keyframes moveUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-300px);
+            }
+        }
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 0px; 
+        }
+
+        ::-webkit-scrollbar-track {
+            background: inherit; 
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: inherit;
+            border-radius: 10px;
+            border: none;
+        }
+        /* For Firefox */
+        html {
+            scrollbar-width: 0;
+            scrollbar-color: inherit;
+        }
+        .sign-in-button {
+            background-color: inherit;
+            color: brown;
+            font-weight: bold;
+            position: absolute;
+            left: 20px;
+            border: 2px solid chocolate;
+            border-radius: 15px;
+            padding: 8px 16px;
+            margin-right: 20px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+        .sign-in-button:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        /* Transparent button with shadow effect */
+        .tnb {
+            background-color: transparent;
+            border-radius: 10px;
+            padding: 0 10px 0 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .tnb:hover {
+            transform: translateY(-2px);
+            border: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        .tnb:active {
+            border: none;
+            transform: scale(0.95);
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            color: chocolate;
+            padding: 25px 50px 20px 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1100; /* Ensure it appears above other elements */
+            display: none;
+            text-align: center;
+        }
+        .popup input[type="text"],
+        .popup input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .popup button {
+            width: 100%;
+            padding: 10px;
+            background-color: chocolate;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .popup button:hover {
+            background-color: darkorange;
+        }
+        .popup a {
+            display: block;
+            margin-top: 10px;
+            color: Blue;
+            text-decoration: none;
+        }
+        /* Media Query for Mobile Devices */
+        @media (max-width: 768px) {
+            .nav-button img {
+                width: 40px;
+                height: 40px;
+            }
+            #b-icon img {
+                width: 40px; /* Adjusted size for b.png */
+                height: 40px;
+            }
+            #coin-icon {
+                width: 30px; /* Adjusted size for coin icon */
+                height: 30px;
+                margin-right: 3px;
+            }
+            #tap-count {
+                font-size: 20px; /* Adjusted font size for tap count */
+            }
+            #game-container {
+                top:12%;
+                position:absolute;
+            }
+            .popup{
+                width:90%;
+            }
+        }
+    </style>
+</head>
+<body id="body">
+
+    <div id="navbar">
+        <button id="sign-in" class="sign-in-button">Sign In</button>
+        <!-- level Icon -->
+        <button id="level-icon" class="nav-button tnb">
+            <span style="font-size: 24px;">&#127942;</span> <!-- Trophy symbol for level -->
+            <div class="icon-label">level</div>
+        </button>
+
+        <!-- group Icon -->
+        <button id="group-icon" class="nav-button tnb">
+            <span style="font-size: 24px;">&#128101;&#65039;</span> <!-- Group of people symbol for group (at least 3) -->
+            <div class="icon-label">group</div>
+        </button>
+    </div>
+
+    <div id="game-container">
+        <div id="coin-container">
+            <img src="bcoin.png" alt="Coin Icon" id="coin-icon">
+            <span id="tap-count">0</span>
+        </div>
+
+        <div id="image-container">
+            <img src="b.png" alt="Center Image" id="center-image">
+        </div>
+
+        <div id="navbar-bottom">
+            <div id="b-icon" class="nav-button">
+                <img src="b.png" alt="B Icon" style="height:80px;width:80px;">
+            </div>
+            <div id="feed-icon" class="nav-button" onclick="showPopup()">
+                <img src="food.png" alt="Food Icon">
+                <div class="icon-label">feed</div>
+            </div>
+            <div id="friend-icon" class="nav-button" >
+                <img src="friends.png" alt="Friend Icon" style="width:65px;">
+                <div class="icon-label">friends</div>
+            </div>
+            <div id="earn-icon" class="nav-button" onclick="showPopup()">
+                <img src="earn.png" alt="Earn Icon">
+                <div class="icon-label">earn</div>
+            </div>
+            <div id="airdrop-icon" class="nav-button" onclick="showPopup()">
+                <img src="berachain.png" alt="Airdrop Icon">
+                <div class="icon-label">airdrop</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sign In/Up Modal -->
+<div id="popup" class="popup">
+    <div id="sign-up-form">
+        <h3>Sign Up</h3>
+        <form>
+            <input type="text" id="username" placeholder="Username"><br>
+            <input type="password" id="password" placeholder="Password"><br>
+            <input type="password" id="reenter-password" placeholder="Re-enter Password"><br>
+            <button type="button" id="signup-button">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+    </div>
+    <div id="login-form" style="display: none;">
+        <h3>Login</h3>
+        <form>
+            <input type="text" id="login-username" placeholder="Username"><br>
+            <input type="password" id="login-password" placeholder="Password"><br>
+            <button type="button" id="login-button">Login</button>
+        </form>
+        <p>Not registered? <a href="#" id="switch-to-signup">Sign Up</a></p>
+    </div>
+</div>
+
+<!-- Coming Soon Popup -->
+<div id="coming-soon-popup" class="popup">
+    <p>Coming Soon</p>
+</div>
+
+<script>
+    document.getElementById('sign-in').addEventListener('click', function() {
+        document.getElementById('popup').style.display = 'block';
+    });
+
+    document.getElementById('switch-to-login').addEventListener('click', function() {
+        document.getElementById('sign-up-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    });
+
+    document.getElementById('switch-to-signup').addEventListener('click', function() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('sign-up-form').style.display = 'block';
+    });
+
+    // Close popup when clicking outside of it
+    window.onclick = function(event) {
+        var popup = document.getElementById('popup');
+        var body = document.getElementById('body');
+        var gc = document.getElementById('game-container');
+        var tnav = document.getElementById('navbar');
+        var bnav = document.getElementById('navbar-bottom');
+        if (event.target == body || event.target ==  gc || event.target ==  tnav || event.target ==  bnav) {
+            popup.style.display = 'none';
+        }
+    };
+
+    // Show "Coming Soon" popup for bottom navbar buttons
+    var bottomNavButtons = document.querySelectorAll('#navbar-bottom .nav-button');
+    bottomNavButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            if (button.id !== 'friend-icon') { // Check if it's not the friend-icon
+                document.getElementById('coming-soon-popup').style.display = 'block';
+                setTimeout(function() {
+                    document.getElementById('coming-soon-popup').style.display = 'none';
+                }, 1000); 
+            }
+        });
+    });
+
+    const imageContainer = document.getElementById('image-container');
+    const tapCountSpan = document.getElementById('tap-count');
+
+    let tapCount = 0;
+
+    function handleTap(x, y, increment) {
+        tapCount += increment;
+        tapCountSpan.textContent = tapCount;
+
+        const tapIndicator = document.createElement('img');
+        tapIndicator.src = 'bcoin.png';
+        tapIndicator.classList.add('tap-indicator');
+        tapIndicator.style.left = `${x - 10}px`; // Center the coin on the tap
+        tapIndicator.style.top = `${y - 10}px`; // Center the coin on the tap
+        document.body.appendChild(tapIndicator);
+
+        setTimeout(() => {
+            tapIndicator.remove();
+        }, 1000);
+    }
+
+    function addTapEffect() {
+        imageContainer.classList.add('tapped');
+        setTimeout(() => {
+            imageContainer.classList.remove('tapped');
+        }, 100); // Duration of the tap effect
+    }
+
+    imageContainer.addEventListener('touchstart', function(event) {
+        addTapEffect();
+        const touchPoints = event.changedTouches.length;
+        for (let i = 0; i < touchPoints; i++) {
+            const touch = event.changedTouches[i];
+            handleTap(touch.clientX, touch.clientY, 1);
+        }
+    });
+
+    imageContainer.addEventListener('click', function(event) {
+        addTapEffect();
+        handleTap(event.clientX, event.clientY, 1);
+    });
+
+    // Prevent default behavior for clicking on b.png image
+    document.getElementById('center-image').addEventListener('click', function(event) {
+        event.preventDefault();
+    });
+
+    // Navigate to invite.html when clicking on friends button
+    document.getElementById('friend-icon').addEventListener('click', function() {
+        window.location.href = 'invite.html';
+    });
+    document.getElementById('b-icon').addEventListener('click', function() {
+        window.location.href = 'index.html';
+    });
+</script>
+
+</body>
+</html>
